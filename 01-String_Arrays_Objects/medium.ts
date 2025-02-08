@@ -122,11 +122,12 @@ const isPalindromic = (str: string) => {
 type TObject = {
   [key: string]: number | object;
 };
+//when called only need to pass the object
 const flattenNestedObject = (
-  currentKeys: string[],
-  keysMap: Map<string, number>,
   nestedObject: TObject,
-  isFirstKey: boolean
+  currentKeys: string[] = [],
+  keysMap: Map<string, number> = new Map(),
+  isFirstKey: boolean = true
 ) => {
   const objectKeys = Object.keys(nestedObject);
   for (let key of objectKeys) {
@@ -136,9 +137,9 @@ const flattenNestedObject = (
       keysMap.set(currentKeys.join("."), nestedObject[key]);
     } else {
       flattenNestedObject(
+        nestedObject[key] as TObject,
         currentKeys,
         keysMap,
-        nestedObject[key] as TObject,
         false
       );
     }
