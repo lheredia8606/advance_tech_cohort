@@ -80,15 +80,15 @@ const mostCommonCharacter = (str: string) => {
 
 const findDuplicates = (nums: number[]) => {
   const numMaps = new Map();
-  const duplicates: number[] = [];
+  const duplicates = new Set();
 
   for (let i = 0; i < nums.length; i++) {
     numMaps.get(nums[i]) !== 1
       ? numMaps.set(nums[i], 1)
-      : duplicates.push(nums[i]);
+      : duplicates.add(nums[i]);
   }
   console.log(duplicates);
-  return duplicates;
+  return Array.from(duplicates.keys());
 };
 
 /*
