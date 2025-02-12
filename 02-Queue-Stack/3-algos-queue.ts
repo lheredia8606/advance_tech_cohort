@@ -13,6 +13,23 @@ import { Queue } from "./1-queue";
 // recentCounter.ping(100);  // returns 2
 // recentCounter.ping(3001); // returns 3
 // recentCounter.ping(3002); // returns 3
+const recentCallsCounter = () => {
+  const queue = new Queue<number>();
+  return {
+    ping: (milliseconds: number) => {
+      queue.enqueue(milliseconds);
+      while (milliseconds - queue.front() > 3000) {
+        queue.dequeue();
+      }
+      return queue.size();
+    },
+  };
+};
+const recentCounter = recentCallsCounter();
+console.log(recentCounter.ping(1)); // returns 1
+console.log(recentCounter.ping(100)); // returns 2
+console.log(recentCounter.ping(3001)); // returns 3
+console.log(recentCounter.ping(3002)); // returns 3
 
 // ==============================
 // 2️⃣ First Unique Character in a String
@@ -20,19 +37,19 @@ import { Queue } from "./1-queue";
 // Given a string `s`, find the **first unique character** and return its index.
 // If no unique character exists, return `-1`. Use a queue to efficiently track character order.
 const firstUniqChar = (str: string) => {
-  let charCount = new Map();
+  let charCount = new Map<string, number>();
   let queue = new Queue<string>();
   for (let i = 0; i < str.length; i++) {
-    if (charCount.get(str[i]) === undefined) {
-      charCount.set(str[i], 1);
-      queue.enqueue(str[i]);
-    } else {
-      charCount.set(str[i], charCount.get(str[i]) + 1);
-    }
+    queue.enqueue(str[i]);
+    charCount.set(str[i], (charCount.get(str[i]) ?? 0) + 1);
   }
-  while (!queue.isEmpty) {
-    const char = queue.dequeue();
-    if (charCount.get(char) === 1) return char;
+  let index = 0;
+  while (!queue.isEmpty()) {
+    let char = queue.dequeue();
+    if (char && charCount.get(char) === 1) {
+      return index;
+    }
+    index++;
   }
   return -1;
 };
