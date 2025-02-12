@@ -72,6 +72,52 @@ const firstUniqChar = (str: string) => {
 // myStack.pop();    // returns 2
 // myStack.isEmpty(); // returns false
 
+function queuedStack<T>() {
+  const queue = new Queue<T>();
+  const helperQueue = new Queue<T>();
+  let lastInserted: T | null = null;
+  const exchageAllFromQueue = (
+    queueToEmpty: Queue<T>,
+    queueToFill: Queue<T>
+  ) => {
+    console.log("init");
+    queueToEmpty.print();
+    while (!queueToEmpty.isEmpty) {
+      const element = queueToEmpty.dequeue();
+      if (element !== null) {
+        queueToFill.enqueue(element);
+      }
+    }
+    console.log("done");
+    queueToFill.print();
+  };
+  return {
+    push: (newElement: T) => {
+      exchageAllFromQueue(queue, helperQueue);
+      queue.enqueue(newElement);
+      exchageAllFromQueue(helperQueue, queue);
+      lastInserted = newElement;
+    },
+    pop: () => {
+      return queue.dequeue();
+    },
+    top: () => lastInserted,
+    isEmpty: () => queue.isEmpty(),
+    size: () => queue.size(),
+    print: () => {
+      exchageAllFromQueue(queue, helperQueue);
+      helperQueue.print();
+      exchageAllFromQueue(helperQueue, queue);
+    },
+  };
+}
+const myStack = queuedStack<number>();
+
+// Example Test Cases:
+myStack.push(1);
+myStack.push(2);
+myStack.push(3);
+
 // ==============================
 // 4️⃣ Rotting Oranges
 // ==============================
