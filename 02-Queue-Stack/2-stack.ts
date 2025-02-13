@@ -24,6 +24,34 @@
 // - Create a method to display the stack elements.
 // - Print elements in order, separated by " | " with the top of the stack on the right.
 
+class Stack<T> {
+  private stack: T[] = [];
+
+  push = (element: T) => {
+    this.stack.push(element);
+  };
+
+  pop = (): T | null => {
+    return this.stack.pop() ?? null;
+  };
+
+  peek = (): T => {
+    return this.stack[this.stack.length - 1];
+  };
+
+  isEmpty = () => {
+    return this.stack.length === 0;
+  };
+
+  size = () => {
+    return this.stack.length;
+  };
+
+  print = () => {
+    console.log(this.stack.join(" | "));
+  };
+}
+
 // Uncomment The Code Below to See If It Works! Feel free to write more code to test and examine the functionality of the stack.
 // const stack = new Stack<number>(); // Create a stack that stores numbers
 // stack.push(10);
