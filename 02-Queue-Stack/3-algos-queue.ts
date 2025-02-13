@@ -64,6 +64,47 @@ const firstUniqChar = (str: string) => {
 // ==============================
 // Implement a stack using only two queues.
 // The implemented stack should support `push`, `pop`, `top`, and `isEmpty` operations.
+function queuedStack<T>() {
+  const stack = new Queue<T>();
+  const helperQueue = new Queue<T>();
+  let lastInserted: T | null = null;
+  const exchangeQueues = (
+    queueToEmpty: Queue<T>,
+    queueToFill: Queue<T>,
+    elementsToHold: number
+  ) => {
+    while (queueToEmpty.size() > elementsToHold) {
+      const dequeuedElement = queueToEmpty.dequeue();
+      if (dequeuedElement) queueToFill.enqueue(dequeuedElement);
+    }
+  };
+  return {
+    push: (element: T) => {
+      stack.enqueue(element);
+      lastInserted = element;
+    },
+    pop: (): T | null => {
+      let elementToReturn: T | null = null;
+      if (stack.size() === 0) {
+        return null;
+      } else if (stack.size() === 1) {
+        lastInserted === null;
+        return stack.dequeue();
+      } else {
+        exchangeQueues(stack, helperQueue, 2);
+        lastInserted = stack.dequeue();
+        elementToReturn = stack.dequeue();
+        exchangeQueues(helperQueue, stack, 0);
+        if (lastInserted) {
+          stack.enqueue(lastInserted);
+        }
+      }
+      return elementToReturn;
+    },
+    top: (): T | null => lastInserted,
+    isEmpty: (): boolean => stack.isEmpty(),
+  };
+}
 
 // Example Test Cases:
 // myStack.push(1);
@@ -71,52 +112,6 @@ const firstUniqChar = (str: string) => {
 // myStack.top();    // returns 2
 // myStack.pop();    // returns 2
 // myStack.isEmpty(); // returns false
-
-function queuedStack<T>() {
-  const queue = new Queue<T>();
-  const helperQueue = new Queue<T>();
-  let lastInserted: T | null = null;
-  const exchageAllFromQueue = (
-    queueToEmpty: Queue<T>,
-    queueToFill: Queue<T>
-  ) => {
-    console.log("init");
-    queueToEmpty.print();
-    while (!queueToEmpty.isEmpty) {
-      const element = queueToEmpty.dequeue();
-      if (element !== null) {
-        queueToFill.enqueue(element);
-      }
-    }
-    console.log("done");
-    queueToFill.print();
-  };
-  return {
-    push: (newElement: T) => {
-      exchageAllFromQueue(queue, helperQueue);
-      queue.enqueue(newElement);
-      exchageAllFromQueue(helperQueue, queue);
-      lastInserted = newElement;
-    },
-    pop: () => {
-      return queue.dequeue();
-    },
-    top: () => lastInserted,
-    isEmpty: () => queue.isEmpty(),
-    size: () => queue.size(),
-    print: () => {
-      exchageAllFromQueue(queue, helperQueue);
-      helperQueue.print();
-      exchageAllFromQueue(helperQueue, queue);
-    },
-  };
-}
-const myStack = queuedStack<number>();
-
-// Example Test Cases:
-myStack.push(1);
-myStack.push(2);
-myStack.push(3);
 
 // ==============================
 // 4️⃣ Rotting Oranges
