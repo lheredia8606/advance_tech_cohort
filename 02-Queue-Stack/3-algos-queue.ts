@@ -194,6 +194,37 @@ const orangesRotting = (grid: number[][]) => {
 // ==============================
 // Given an array `nums` and an integer `k`, return the maximum values in every window of size `k`.
 // Use a deque (double-ended queue) to efficiently track the max values.
+type windowValue = {
+  value: number;
+  index: number;
+};
+const maxSlidingWindow = (nums: number[], windowSize: number) => {
+  const maxInWindow: number[] = [];
+  const windowQueue = deque<windowValue>();
+
+  const insertInQueue = (newElement: windowValue) => {
+    if (
+      windowQueue.isEmpty() ||
+      windowQueue.peekFront().value < newElement.value
+    ) {
+      windowQueue.addFront(newElement);
+    } else {
+      while (windowQueue.peeKBack().value < newElement.value) {
+        windowQueue.removeBack();
+      }
+      windowQueue.addBack(newElement);
+    }
+  };
+  const purge = (currentIndex: number) => {
+    while (windowQueue.peekFront().index < currentIndex - windowSize) {
+      windowQueue.removeFront();
+    }
+  };
+  if (nums.length < windowSize) return [];
+  for (let i = 0; i < nums.length; i++) {}
+
+  return maxInWindow;
+};
 
 // Example Test Cases:
 // maxSlidingWindow([1,3,-1,-3,5,3,6,7], 3) // [3,3,5,5,6,7]
