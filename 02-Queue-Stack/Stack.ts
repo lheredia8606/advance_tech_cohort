@@ -24,7 +24,7 @@
 // - Create a method to display the stack elements.
 // - Print elements in order, separated by " | " with the top of the stack on the right.
 
-class Stack<T> {
+export class Stack<T> {
   private stack: T[] = [];
 
   push = (element: T) => {
