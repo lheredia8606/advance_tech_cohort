@@ -36,7 +36,7 @@ console.log(recentCounter.ping(3002)); // returns 3
 // ==============================
 // Given a string `s`, find the **first unique character** and return its index.
 // If no unique character exists, return `-1`. Use a queue to efficiently track character order.
-const firstUniqChar = (str: string) => {
+export const firstUniqChar = (str: string) => {
   let charCount = new Map<string, number>();
   let queue = new Queue<string>();
   for (let i = 0; i < str.length; i++) {
@@ -64,7 +64,7 @@ const firstUniqChar = (str: string) => {
 // ==============================
 // Implement a stack using only two queues.
 // The implemented stack should support `push`, `pop`, `top`, and `isEmpty` operations.
-function queuedStack<T>() {
+export const queuedStack = <T>() => {
   const stack = new Queue<T>();
   const helperQueue = new Queue<T>();
   let lastInserted: T | null = null;
@@ -104,7 +104,7 @@ function queuedStack<T>() {
     top: (): T | null => lastInserted,
     isEmpty: (): boolean => stack.isEmpty(),
   };
-}
+};
 
 // Example Test Cases:
 // myStack.push(1);
