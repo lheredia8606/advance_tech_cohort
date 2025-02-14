@@ -124,6 +124,71 @@ export const queuedStack = <T>() => {
 // orangesRotting([[2,1,1],[0,1,1],[1,0,1]]) // -1
 // orangesRotting([[0,2]]) // 0
 
+type TCoordinate = {
+  x: number;
+  y: number;
+};
+
+const orangesRotting = (grid: number[][]) => {
+  const rottenQueue = new Queue<TCoordinate>();
+  const newRotten = new Queue<TCoordinate>();
+  let stillRooting = true;
+  let minutes = 0;
+  let goodOranges: number = 0;
+  const isCoordValid = ({ x, y }: TCoordinate) => {
+    return x >= 0 && x < grid.length && y >= 0 && y < grid[0].length;
+  };
+  const isFresh = ({ x, y }: TCoordinate) => {
+    return grid[x][y] === 1;
+  };
+
+  const tryToRot = ({ x, y }: TCoordinate) => {
+    if (isCoordValid({ x, y }) && isFresh({ x, y })) {
+      newRotten.enqueue({
+        x,
+        y,
+      });
+      grid[x][y] = 2;
+      goodOranges--;
+    }
+  };
+  const spread = ({ x, y }: TCoordinate) => {
+    tryToRot({ x, y: y - 1 });
+    tryToRot({ x, y: y + 1 });
+    tryToRot({ x: x + 1, y });
+    tryToRot({ x: x - 1, y });
+  };
+  const firstPass = () => {
+    for (let i = 0; i < grid.length; i++) {
+      for (let j = 0; j < grid[i].length; j++) {
+        if (grid[i][j] === 2) {
+          rottenQueue.enqueue({ x: i, y: j });
+        }
+        if (grid[i][j] === 1) {
+          goodOranges++;
+        }
+      }
+    }
+  };
+  firstPass();
+  if (goodOranges === 0) return 0;
+  while (stillRooting) {
+    minutes++;
+    while (!rottenQueue.isEmpty()) {
+      spread(rottenQueue.dequeue()!);
+      if (goodOranges === 0) {
+        return minutes;
+      }
+    }
+    if (newRotten.isEmpty()) {
+      return -1;
+    }
+    while (!newRotten.isEmpty()) {
+      rottenQueue.enqueue(newRotten.dequeue()!);
+    }
+  }
+};
+
 // ==============================
 // 5️⃣ Sliding Window Maximum
 // ==============================
