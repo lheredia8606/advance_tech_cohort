@@ -1,6 +1,7 @@
 // BE SURE TO IMPORT YOUR QUEUE CLASS
 
 import { Queue } from "./1-queue";
+import { deque } from "./deque";
 
 // ==============================
 // 1️⃣ Implement a Recent Calls Counter
@@ -200,28 +201,39 @@ type windowValue = {
 };
 const maxSlidingWindow = (nums: number[], windowSize: number) => {
   const maxInWindow: number[] = [];
-  const windowQueue = deque<windowValue>();
+  const windowDeque = deque<windowValue>();
 
   const insertInQueue = (newElement: windowValue) => {
     if (
-      windowQueue.isEmpty() ||
-      windowQueue.peekFront().value < newElement.value
+      windowDeque.isEmpty() ||
+      windowDeque.peekFront().value < newElement.value
     ) {
-      windowQueue.addFront(newElement);
+      windowDeque.addFront(newElement);
     } else {
-      while (windowQueue.peeKBack().value < newElement.value) {
-        windowQueue.removeBack();
+      while (windowDeque.peeKBack().value < newElement.value) {
+        windowDeque.removeBack();
       }
-      windowQueue.addBack(newElement);
+      windowDeque.addBack(newElement);
     }
   };
+
   const purge = (currentIndex: number) => {
-    while (windowQueue.peekFront().index < currentIndex - windowSize) {
-      windowQueue.removeFront();
+    while (
+      windowDeque.peekFront() &&
+      windowDeque.peekFront().index < currentIndex - windowSize
+    ) {
+      windowDeque.removeFront();
     }
   };
+
   if (nums.length < windowSize) return [];
-  for (let i = 0; i < nums.length; i++) {}
+  for (let i = 0; i < nums.length; i++) {
+    purge(i);
+    insertInQueue({ index: i, value: nums[i] });
+    if (i >= windowSize - 1) {
+      maxInWindow.push(windowDeque.peekFront().value);
+    }
+  }
 
   return maxInWindow;
 };
