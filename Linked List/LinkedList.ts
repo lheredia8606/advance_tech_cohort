@@ -110,9 +110,9 @@ export class LinkedList<T> {
     return this.length;
   }
   getHead() {
-    return this.head?.value || null;
+    return this.head;
   }
   getTail() {
-    return this.tail?.value || null;
+    return this.tail;
   }
 }
