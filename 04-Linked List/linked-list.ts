@@ -17,15 +17,15 @@ export class LinkedList {
   }
 
   /**
-   * changed in case I need to chain something
+   * changed in return from void to LinkedLink in case I need to chain something
    *
    * @param value
    * @returns ListNode
    */
   // EASY: Append a value to the end of the list
-  append(value: number): ListNode {
+  append(value: number): LinkedList {
     const newNode = new ListNode(value);
-    if (this.head) {
+    if (!this.head) {
       this.head = newNode;
     } else {
       let tail = this.head!;
@@ -34,7 +34,7 @@ export class LinkedList {
       }
       tail.next = newNode;
     }
-    return newNode;
+    return this;
   }
 
   // EASY: Find a value in the list
@@ -49,6 +49,42 @@ export class LinkedList {
     return false;
   }
 
+  // MEDIUM: Reverse the linked list
+  reverse(): LinkedList {
+    if (!this.head || !this.head.next) {
+      return this;
+    }
+    const oldHead = this.removeHead();
+    return this.reverse().append(oldHead!.value);
+  }
+
+  // MEDIUM: Remove a node by value
+  remove(value: number): ListNode | null {
+    if (this.head?.value === value) {
+      return this.removeHead();
+    }
+    let previousNode = this.head;
+    while (previousNode?.next) {
+      let currentNode = previousNode.next;
+      if (currentNode.value === value) {
+        previousNode.next = currentNode.next;
+        return currentNode;
+      }
+      previousNode = currentNode;
+    }
+    return null;
+  }
+
+  print(): string {
+    let currentNode = this.head;
+    let strToReturn = `${currentNode?.value || null}`;
+    while (currentNode?.next) {
+      currentNode = currentNode.next;
+      strToReturn = `${strToReturn} => ${currentNode.value}`;
+    }
+    return strToReturn !== "null" ? `${strToReturn} => null` : "null";
+  }
+
   removeHead(): ListNode | null {
     if (this.head == null) {
       return null;
@@ -56,14 +92,6 @@ export class LinkedList {
     const oldHead = this.head;
     this.head = this.head.next;
     return oldHead;
-  }
-
-  // MEDIUM: Reverse the linked list
-  reverse(): void {}
-
-  // MEDIUM: Remove a node by value
-  remove(value: number): void {
-    // TODO: Implement remove method
   }
 }
 
@@ -73,9 +101,10 @@ linkedList.append(2);
 linkedList.append(3);
 linkedList.append(4);
 linkedList.append(5);
-
-console.log("Linked List Find 3:", linkedList.find(3)); // Expected: true
+console.log(linkedList.find(3));
+console.log(linkedList.print());
 linkedList.reverse();
-console.log("Linked List Reversed Find 3:", linkedList.find(3)); // Expected: true
-linkedList.remove(3);
-console.log("Linked List Find 3 After Removal:", linkedList.find(3)); // Expected: false
+console.log(linkedList.find(3));
+console.log(linkedList.print());
+linkedList.remove(4);
+console.log(linkedList.print());
