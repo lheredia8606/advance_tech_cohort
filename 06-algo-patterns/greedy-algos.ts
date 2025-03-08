@@ -5,8 +5,20 @@
 // A child will be content if they receive a cookie with a size greater than or equal to their greed factor.
 // You can assign at most one cookie per child using a greedy approach.
 
-function findContentChildren(g, s) {
-  // Implement greedy logic
+function findContentChildren(g: number[], s: number[]) {
+  g.sort((a, b) => a - b);
+  s.sort((a, b) => a - b);
+  let greedyIndex = 0;
+  let cookieIndex = 0;
+  while (greedyIndex < g.length && cookieIndex < s.length) {
+    if (g[greedyIndex] <= s[cookieIndex]) {
+      greedyIndex++;
+      cookieIndex++;
+    } else {
+      cookieIndex++;
+    }
+  }
+  return greedyIndex;
 }
 
 // Test Cases
@@ -19,8 +31,27 @@ console.log(findContentChildren([], [1, 2, 3])); // Edge Case: No children
 // Determine if you can reach the last index starting from index 0.
 // Use a greedy approach to maximize the reach.
 
-function canJump(nums) {
-  // Implement greedy logic
+function canJump(nums: number[]): boolean {
+  if (nums.length === 0) return false;
+  let currentPosition = 0;
+  let currentRange = 0;
+  let maxJumpFound = nums[0];
+
+  while (maxJumpFound < nums.length - 1) {
+    if (currentPosition === currentRange) {
+      if (currentRange === maxJumpFound) {
+        return false;
+      } else {
+        currentRange = maxJumpFound;
+      }
+    } else {
+      currentPosition++;
+      if (currentPosition + nums[currentPosition] > maxJumpFound) {
+        maxJumpFound = currentPosition + nums[currentPosition];
+      }
+    }
+  }
+  return true;
 }
 
 // Test Cases
@@ -49,8 +80,25 @@ console.log(leastInterval(["A", "B", "C", "D"], 0)); // Edge Case: No cooldown p
 // return the starting gas station index if you can travel around the circuit once.
 // If it's not possible, return -1. Use a greedy approach to find the optimal starting station.
 
-function canCompleteCircuit(gas, cost) {
-  // Implement greedy logic
+function canCompleteCircuit(gas: number[], cost: number[]) {
+  let allGas = gas[0] - cost[0];
+  let minIndex = 0;
+  if (gas.length === 0) {
+    return -1;
+  }
+  const remainingGas: number[] = [];
+  remainingGas[0] = gas[0] - cost[0];
+  for (let i = 1; i < gas.length; i++) {
+    remainingGas[i] = gas[i] - cost[i] + remainingGas[i - 1];
+    allGas += gas[i] - cost[i];
+    if (remainingGas[i] < remainingGas[minIndex]) {
+      minIndex = i;
+    }
+  }
+  if (allGas < 0) {
+    return -1;
+  }
+  return (minIndex + 1) % gas.length;
 }
 
 // Test Cases
